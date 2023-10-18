@@ -1,8 +1,20 @@
 import React from "react";
 
-const Cell = ({ x, y, isStart, isFinish, isBlocked }) => {
+const cellColor = {
+  0: "#c1d9f9", //usual cell
+  1: "#0a1c34", //barrier cell
+  2: "#295409", //start cell
+  3: "#df0d21", //finish cell
+};
+
+const Cell = ({ value, onClick }) => {
   return (
-    <div className='block w-10 h-10 bg-green-300 border-2 border-black cursor-pointer hover:bg-green-400'></div>
+    <div
+      className='flex items-center justify-center w-6 h-6 border-[1px] border-black cursor-pointer select-none'
+      onClick={onClick}
+      style={{ backgroundColor: cellColor[value] }}>
+      {value}
+    </div>
   );
 };
 
