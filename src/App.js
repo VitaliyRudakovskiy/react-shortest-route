@@ -1,11 +1,9 @@
 import React from "react";
-import Navbar from "./components/Navbar";
 import Matrix from "./components/Matrix";
 
 function App() {
   return (
-    <div>
-      <Navbar />
+    <div className='flex items-center justify-center w-full'>
       <Matrix />
     </div>
   );
