@@ -20,6 +20,8 @@ const defaultMatrix = {
 const Matrix = () => {
   const allCells = useSelector((state) => state.cells.cells);
 
+  const [modalOpen, setModalOpen] = useState(false);
+
   const [isStartCell, setIsStartCell] = useState(false);
   const [isFinishCell, setIsFinishCell] = useState(false);
   const [isBarrierCell, setIsBarrierCell] = useState(false);
@@ -89,8 +91,10 @@ const Matrix = () => {
 
   const drawPath = () => {
     const path = createPath(cells);
+
     const pathLength = path.length;
     const pathCells = path.path;
+    const executionTime = path.time;
 
     const pathCellsWithoutEndPoints = pathCells;
     pathCellsWithoutEndPoints.shift();
@@ -107,6 +111,11 @@ const Matrix = () => {
 
     console.log("Path length:", pathLength);
     console.log("Path cells:", pathCells);
+    console.log("Execution time:", executionTime);
+
+    setModalOpen(true);
+
+    return { pathLength, executionTime };
   };
 
   return (
@@ -134,9 +143,15 @@ const Matrix = () => {
         handleBarrierClick={handleBarrierClick}
         handleClearField={handleClearField}
         drawPath={drawPath}
+        setModalOpen={setModalOpen}
+        cells={cells}
       />
 
-      <ModalResult />
+      <ModalResult
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
+        drawPath={drawPath}
+      />
     </div>
   );
 };

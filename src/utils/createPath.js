@@ -1,4 +1,6 @@
 const createPath = (matrix) => {
+  const startTime = performance.now(); // Запускаем таймер начала выполнения функции
+
   let start = null; // Начальная точка (значение 2)
   let finish = null; // Конечная точка (значение 3)
 
@@ -35,7 +37,7 @@ const createPath = (matrix) => {
 
   // Если не удалось найти начальную и конечную точки, возвращаем -1
   if (!start || !finish) {
-    return { path: [], length: -1 };
+    return { path: [], length: -1, time: 0 };
   }
 
   // Добавление стартовой точки в очередь
@@ -61,7 +63,10 @@ const createPath = (matrix) => {
 
       const pathLength = resultPath.length - 1; // Длина пути
 
-      return { path: resultPath, length: pathLength };
+      const endTime = performance.now(); // Завершаем таймер по выполнению функции
+      const executionTime = endTime - startTime; // Вычисляем разницу времени для измерения времени выполнения
+
+      return { path: resultPath, length: pathLength, time: executionTime };
     }
 
     // Поиск соседних точек
@@ -94,7 +99,11 @@ const createPath = (matrix) => {
     }
   }
 
-  return { path: [], length: -1 }; // Если путь не найден
+  const endTime = performance.now(); // Завершаем таймер по выполнению функции
+  const executionTime = endTime - startTime; // Вычисляем разницу времени для измерения времени выполнения
+
+  // Возвращаем объект с пустым путем, -1 в длине и временем выполнения
+  return { path: [], length: -1, time: executionTime };
 };
 
 export default createPath;
