@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Cell from "./Cell";
 import nextId from "react-id-generator";
-import { useDispatch, useSelector } from "react-redux";
 import createPath from "../utils/createPath";
 import ButtonsSection from "./ButtonsSection";
 import ModalResult from "./ModalResult";
@@ -19,17 +18,14 @@ const pathData = {
 };
 
 const Matrix = () => {
-  const allCells = useSelector((state) => state.cells.cells);
-  const dispatch = useDispatch();
+  const initialCells = Array.from({ length: defaultMatrix.rows }, () =>
+    Array(defaultMatrix.cols).fill(0)
+  );
 
   const saveMatrixToLocalStorage = (matrix) => {
     const matrixJSON = JSON.stringify(matrix);
     window.localStorage.setItem("matrix-path", matrixJSON);
   };
-
-  const initialCells = Array.from({ length: defaultMatrix.rows }, () =>
-    Array(defaultMatrix.cols).fill(0)
-  );
 
   const [cells, setCells] = useState(initialCells);
   const [modalOpen, setModalOpen] = useState(false);
@@ -63,9 +59,11 @@ const Matrix = () => {
       pathData.finishCell = updatedCells[row][col];
     }
     if (isBarrierCell) {
-      updatedCells[row][col] = cells[row][col] === 0 ? 1 : 0;
+      updatedCells[row][col] =
+        cells[row][col] === 0 ? 1 : cells[row][col] === 4 ? 1 : 0;
     }
     setCells(updatedCells);
+    saveMatrixToLocalStorage(updatedCells);
   };
 
   const handleStartClick = () => {
@@ -95,10 +93,22 @@ const Matrix = () => {
       return row.map((value) => 0);
     });
     setCells(updatedCells);
+    saveMatrixToLocalStorage(updatedCells);
+  };
+
+  const clearPath = () => {
+    const updatedCells = cells.map((row) => {
+      return row.map((value) => (value === 4 ? 0 : value));
+    });
+    setCells(updatedCells);
+    saveMatrixToLocalStorage(updatedCells);
+    return updatedCells;
   };
 
   const drawPath = () => {
-    const path = createPath(cells);
+    const updatedCells = clearPath();
+
+    const path = createPath(updatedCells);
 
     pathData.pathLength = path.length;
     const pathCells = path.path;
@@ -111,18 +121,18 @@ const Matrix = () => {
     // Обновляем значения на пути
     pathCellsWithoutEndPoints.forEach((cell) => {
       const [row, col] = cell;
-      cells[row][col] = 4;
+      updatedCells[row][col] = 4;
     });
 
     // Обновляем состояние
-    setCells([...cells]);
+    setCells([...updatedCells]);
 
     setModalOpen(true);
   };
 
   return (
     <div className='flex flex-col gap-4'>
-      <h1 className='text-center text-3xl font-bold mt-3'>Matrix</h1>
+      <h1 className='text-center text-3xl font-bold mt-3'>Shortest path</h1>
 
       <div className='grid grid-cols-20 gap-0 max-w-lg mx-auto'>
         {cells.map((row, rowIndex) =>
@@ -144,8 +154,8 @@ const Matrix = () => {
         handleFinishClick={handleFinishClick}
         handleBarrierClick={handleBarrierClick}
         handleClearField={handleClearField}
+        clearPath={clearPath}
         drawPath={drawPath}
-        setModalOpen={setModalOpen}
       />
 
       <ModalResult

@@ -4,6 +4,7 @@ import "./Button.css";
 const buttonTypes = {
   primary: "primary",
   danger: "danger",
+  main: "main",
 };
 
 const Button = ({ children, variant, isPressed, style, ...rest }) => {

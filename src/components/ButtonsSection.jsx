@@ -9,6 +9,7 @@ const ButtonsSection = ({
   handleFinishClick,
   handleBarrierClick,
   handleClearField,
+  clearPath,
   drawPath,
 }) => {
   return (
@@ -31,10 +32,13 @@ const ButtonsSection = ({
         onClick={handleBarrierClick}>
         Set Barrier
       </Button>
-      <Button variant='primary' onClick={handleClearField}>
+      <Button variant='danger' onClick={handleClearField}>
         Clear All
       </Button>
-      <Button variant='primary' onClick={drawPath}>
+      <Button variant='danger' onClick={clearPath}>
+        Clear Path
+      </Button>
+      <Button variant='main' onClick={drawPath}>
         Create path
       </Button>
     </div>

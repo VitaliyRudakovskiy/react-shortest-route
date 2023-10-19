@@ -1,5 +1,7 @@
+import now from "performance-now";
+
 const createPath = (matrix) => {
-  const startTime = performance.now(); // Запускаем таймер начала выполнения функции
+  const startTime = now(); // Запускаем таймер начала выполнения функции
 
   let start = null; // Начальная точка (значение 2)
   let finish = null; // Конечная точка (значение 3)
@@ -63,7 +65,7 @@ const createPath = (matrix) => {
 
       const pathLength = resultPath.length - 1; // Длина пути
 
-      const endTime = performance.now(); // Завершаем таймер по выполнению функции
+      const endTime = now(); // Завершаем таймер по выполнению функции
       const executionTime = endTime - startTime; // Вычисляем разницу времени для измерения времени выполнения
 
       return { path: resultPath, length: pathLength, time: executionTime };
@@ -99,7 +101,7 @@ const createPath = (matrix) => {
     }
   }
 
-  const endTime = performance.now(); // Завершаем таймер по выполнению функции
+  const endTime = now(); // Завершаем таймер по выполнению функции
   const executionTime = endTime - startTime; // Вычисляем разницу времени для измерения времени выполнения
 
   // Возвращаем объект с пустым путем, -1 в длине и временем выполнения
