@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Cell from "./Cell";
-import Button from "../components/UI/Button/Button";
 import nextId from "react-id-generator";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -9,6 +8,9 @@ import {
   addBarriers,
   clearField,
 } from "../features/cellsSlice";
+import createPath from "../utils/createPath";
+import ButtonsSection from "./ButtonsSection";
+import ModalResult from "./ModalResult";
 
 const defaultMatrix = {
   rows: 20,
@@ -17,7 +19,6 @@ const defaultMatrix = {
 
 const Matrix = () => {
   const allCells = useSelector((state) => state.cells.cells);
-  console.log(allCells);
 
   const [isStartCell, setIsStartCell] = useState(false);
   const [isFinishCell, setIsFinishCell] = useState(false);
@@ -29,9 +30,9 @@ const Matrix = () => {
     Array(defaultMatrix.cols).fill(0)
   );
 
-  useEffect(() => {
-    console.log("Something is happening in store");
-  }, [dispatch]);
+  // useEffect(() => {
+  //   console.log("Something is happening in store");
+  // }, [dispatch]);
 
   const [cells, setCells] = useState(initialCells);
 
@@ -86,7 +87,27 @@ const Matrix = () => {
     dispatch(clearField());
   };
 
-  const drawPath = () => {};
+  const drawPath = () => {
+    const path = createPath(cells);
+    const pathLength = path.length;
+    const pathCells = path.path;
+
+    const pathCellsWithoutEndPoints = pathCells;
+    pathCellsWithoutEndPoints.shift();
+    pathCellsWithoutEndPoints.pop();
+
+    // Обновляем значения на пути
+    pathCellsWithoutEndPoints.forEach((cell) => {
+      const [row, col] = cell;
+      cells[row][col] = 4;
+    });
+
+    // Обновляем состояние
+    setCells([...cells]);
+
+    console.log("Path length:", pathLength);
+    console.log("Path cells:", pathCells);
+  };
 
   return (
     <div className='flex flex-col gap-4'>
@@ -104,32 +125,18 @@ const Matrix = () => {
         )}
       </div>
 
-      <div className='flex flex-row flex-wrap items-center justify-center gap-4 max-w-lg'>
-        <Button
-          variant='primary'
-          isPressed={isStartCell}
-          onClick={handleStartClick}>
-          Set Start
-        </Button>
-        <Button
-          variant='primary'
-          isPressed={isFinishCell}
-          onClick={handleFinishClick}>
-          Set Finish
-        </Button>
-        <Button
-          variant='primary'
-          isPressed={isBarrierCell}
-          onClick={handleBarrierClick}>
-          Set Barrier
-        </Button>
-        <Button variant='primary' onClick={handleClearField}>
-          Clear All
-        </Button>
-        <Button variant='primary' onClick={drawPath}>
-          Create path
-        </Button>
-      </div>
+      <ButtonsSection
+        isStartCell={isStartCell}
+        isFinishCell={isFinishCell}
+        isBarrierCell={isBarrierCell}
+        handleStartClick={handleStartClick}
+        handleFinishClick={handleFinishClick}
+        handleBarrierClick={handleBarrierClick}
+        handleClearField={handleClearField}
+        drawPath={drawPath}
+      />
+
+      <ModalResult />
     </div>
   );
 };

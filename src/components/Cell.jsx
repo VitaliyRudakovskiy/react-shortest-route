@@ -5,6 +5,7 @@ const cellColor = {
   1: "#0a1c34", //barrier cell
   2: "#295409", //start cell
   3: "#df0d21", //finish cell
+  4: "#ffff00", //path cell
 };
 
 const Cell = ({ value, onClick }) => {
