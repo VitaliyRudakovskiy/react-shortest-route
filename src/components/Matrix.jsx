@@ -1,13 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Cell from "./Cell";
 import nextId from "react-id-generator";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addStart,
-  addFinish,
-  addBarriers,
-  clearField,
-} from "../features/cellsSlice";
 import createPath from "../utils/createPath";
 import ButtonsSection from "./ButtonsSection";
 import ModalResult from "./ModalResult";
@@ -17,26 +11,40 @@ const defaultMatrix = {
   cols: 20,
 };
 
+const pathData = {
+  pathLength: 0,
+  time: 0,
+  startCell: null,
+  finishCell: null,
+};
+
 const Matrix = () => {
   const allCells = useSelector((state) => state.cells.cells);
+  const dispatch = useDispatch();
 
+  const saveMatrixToLocalStorage = (matrix) => {
+    const matrixJSON = JSON.stringify(matrix);
+    window.localStorage.setItem("matrix-path", matrixJSON);
+  };
+
+  const initialCells = Array.from({ length: defaultMatrix.rows }, () =>
+    Array(defaultMatrix.cols).fill(0)
+  );
+
+  const [cells, setCells] = useState(initialCells);
   const [modalOpen, setModalOpen] = useState(false);
 
   const [isStartCell, setIsStartCell] = useState(false);
   const [isFinishCell, setIsFinishCell] = useState(false);
   const [isBarrierCell, setIsBarrierCell] = useState(false);
 
-  const dispatch = useDispatch();
-
-  const initialCells = Array.from({ length: defaultMatrix.rows }, () =>
-    Array(defaultMatrix.cols).fill(0)
-  );
-
-  // useEffect(() => {
-  //   console.log("Something is happening in store");
-  // }, [dispatch]);
-
-  const [cells, setCells] = useState(initialCells);
+  useEffect(() => {
+    const storedMatrix = window.localStorage.getItem("matrix-path");
+    if (storedMatrix) {
+      const parsedMatrix = JSON.parse(storedMatrix);
+      setCells(parsedMatrix);
+    }
+  }, []);
 
   const handleCellClick = (row, col) => {
     let updatedCells = [...cells];
@@ -45,16 +53,17 @@ const Matrix = () => {
         return row.map((value) => (value === 2 ? 0 : value));
       });
       updatedCells[row][col] = 2;
+      pathData.startCell = updatedCells[row][col];
     }
     if (isFinishCell) {
       updatedCells = updatedCells.map((row) => {
         return row.map((value) => (value === 3 ? 0 : value));
       });
       updatedCells[row][col] = 3;
+      pathData.finishCell = updatedCells[row][col];
     }
     if (isBarrierCell) {
       updatedCells[row][col] = cells[row][col] === 0 ? 1 : 0;
-      dispatch(addBarriers({ row, col }));
     }
     setCells(updatedCells);
   };
@@ -86,15 +95,14 @@ const Matrix = () => {
       return row.map((value) => 0);
     });
     setCells(updatedCells);
-    dispatch(clearField());
   };
 
   const drawPath = () => {
     const path = createPath(cells);
 
-    const pathLength = path.length;
+    pathData.pathLength = path.length;
     const pathCells = path.path;
-    const executionTime = path.time;
+    pathData.time = path.time;
 
     const pathCellsWithoutEndPoints = pathCells;
     pathCellsWithoutEndPoints.shift();
@@ -109,13 +117,7 @@ const Matrix = () => {
     // Обновляем состояние
     setCells([...cells]);
 
-    console.log("Path length:", pathLength);
-    console.log("Path cells:", pathCells);
-    console.log("Execution time:", executionTime);
-
     setModalOpen(true);
-
-    return { pathLength, executionTime };
   };
 
   return (
@@ -144,13 +146,12 @@ const Matrix = () => {
         handleClearField={handleClearField}
         drawPath={drawPath}
         setModalOpen={setModalOpen}
-        cells={cells}
       />
 
       <ModalResult
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
-        drawPath={drawPath}
+        pathData={pathData}
       />
     </div>
   );
