@@ -27,13 +27,23 @@ const createPath = (matrix) => {
 
   // Находим начальную и конечную точки
   for (let i = 0; i < matrix.length; i++) {
-    for (let j = 0; j < matrix[i].length; j++) {
-      if (matrix[i][j] === 2) {
-        start = [i, j];
-        distances[i][j] = 0; // Расстояние до начальной точки равно 0
-      } else if (matrix[i][j] === 3) {
-        finish = [i, j];
-      }
+    const row = matrix[i];
+
+    // Используем indexOf для поиска начальной и конечной точки в строке
+    const startIndex = row.indexOf(2);
+    if (startIndex !== -1) {
+      start = [i, startIndex];
+      distances[i][startIndex] = 0; // Расстояние до начальной точки равно 0
+    }
+
+    const finishIndex = row.indexOf(3);
+    if (finishIndex !== -1) {
+      finish = [i, finishIndex];
+    }
+
+    // Если и начальная, и конечная точки уже найдены, завершаем поиск
+    if (start && finish) {
+      break;
     }
   }
 

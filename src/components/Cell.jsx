@@ -1,5 +1,6 @@
 import React from "react";
 
+//цвет ячейки в зависимости от ее значения
 const cellColor = {
   0: "#c1d9f9", //usual cell
   1: "#0a1c34", //barrier cell
@@ -11,7 +12,7 @@ const cellColor = {
 const Cell = ({ value, onClick }) => {
   return (
     <div
-      className='flex items-center justify-center w-6 h-6 border-[1px] border-black cursor-pointer select-none'
+      className='flex items-center justify-center w-full min-h-[13px] border-[1px] border-black cursor-pointer select-none'
       onClick={onClick}
       style={{ backgroundColor: cellColor[value] }}></div>
   );

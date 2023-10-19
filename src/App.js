@@ -3,7 +3,7 @@ import Matrix from "./components/Matrix";
 
 function App() {
   return (
-    <div className='flex items-center justify-center w-full'>
+    <div className='w-full h-full px-4'>
       <Matrix />
     </div>
   );

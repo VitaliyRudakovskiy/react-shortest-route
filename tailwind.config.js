@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       gridTemplateColumns: {
-        20: "repeat(20, minmax(0, 1fr))",
+        100: "repeat(100, minmax(0, 1fr))",
       },
     },
   },
