@@ -7,8 +7,8 @@ import ModalResult from "./ModalResult";
 
 //исходные координаты матрицы
 const defaultMatrix = {
-  rows: 100,
-  cols: 100,
+  rows: 20,
+  cols: 20,
 };
 
 //объект содержит данные для передачи в модальное окно вывода результата
@@ -148,13 +148,13 @@ const Matrix = () => {
   };
 
   return (
-    <div className='flex flex-col items-center justify-between'>
-      <h1 className='text-center text-3xl font-bold my-2'>
+    <div className="flex flex-col items-center justify-between">
+      <h1 className="text-center text-3xl font-bold mt-4 mb-5">
         This application finds the shortest path between 2 cells
       </h1>
 
       {/* Для каждого элемента матрицы создаем ячейку */}
-      <div className='grid grid-cols-100 gap-0 w-full mb-2'>
+      <div className="grid grid-cols-20 gap-0 mb-5">
         {cells.map((row, rowIndex) =>
           row.map((value, colIndex) => (
             <Cell

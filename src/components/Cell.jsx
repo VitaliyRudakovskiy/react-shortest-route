@@ -12,9 +12,10 @@ const cellColor = {
 const Cell = ({ value, onClick }) => {
   return (
     <div
-      className='flex items-center justify-center w-full min-h-[13px] border-[1px] border-black cursor-pointer select-none'
+      className="flex items-center justify-center w-[23px] h-[23px] border-[1px] border-black cursor-pointer select-none"
       onClick={onClick}
-      style={{ backgroundColor: cellColor[value] }}></div>
+      style={{ backgroundColor: cellColor[value] }}
+    ></div>
   );
 };
 
